@@ -55,13 +55,17 @@ public class UserController {
     public User editUser(@PathVariable Long id, @RequestBody User user){
         // Dont forget to make a new BCrypt when using bcrypt
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        System.out.println(user.getEmail());
         Optional<User> userToEdit = userRepository.findById(id);
         User foundUser = userToEdit.get();
         foundUser.setUsername(user.getUsername());
         foundUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         foundUser.setEmail(user.getEmail());
-        System.out.println("foundUser's email: " + foundUser.getEmail());
         return userRepository.save(foundUser);
+    }
+
+    @DeleteMapping("/api/users/{id}")
+    public String deleteUser(@PathVariable Long id){
+        userRepository.deleteById(id);
+        return "Deleted user with user id: " + id;
     }
 }
