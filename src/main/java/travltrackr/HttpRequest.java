@@ -10,22 +10,19 @@ import java.net.URLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class HttpRequest {
+
+
     public final Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
-    String URLSTRING = "https://api.darksky.net/forecast/f731e2c5a8a857fbe7119a0c1b5e76c9/39.693967,-104.911074?exclude=minutely,hourly";
-    // parsed locator
+    String URLSTRING = "https://api.yelp.com/v3/businesses/search?location=Denver";
     String URLPROTOCOL = "https";
-    // final static String URLAUTHORITY = "wordpress.org:443";
-    String URLHOST = "wordpress.org";
-    String URLPATH = "/support/topic/page-jumps-within-wordpress/";
-    // final static String URLFILENAME = "/support/topic/page-jumps-within-wordpress/?replies=3";
-    // final static int URLPORT = 443;
-    int URLDEFAULTPORT = 443;
-    String URLQUERY = "replies=3";
-    String URLREFERENCE = "post-2278484";
-    String URLCOMPOUND = URLPROTOCOL + "://" + URLHOST + ":" + URLDEFAULTPORT + URLPATH + "?" + URLQUERY + "#" + URLREFERENCE;
+    String URLHOST = "api.yelp.com";
+    String URLPATH = "/v3/businesses/search";
+    String URLCOMPOUND = URLPROTOCOL + "://" + URLHOST + URLPATH + "?";
 
     URL url;
     URLConnection urlConnection = null;
@@ -33,21 +30,23 @@ public class HttpRequest {
     BufferedReader in = null;
     String urlContent = "";
 
-    public String testURL(String urlString) throws IOException, IllegalArgumentException {
+    public String testURL(String urlString, String yelpApiKey, String location, String finalAttr) throws IOException, IllegalArgumentException {
         String urlStringCont = "";
         // comment the if clause if experiment with URL
-        /*if (!URLSTRING.equals(urlString)) {
-            throw new IllegalArgumentException("URL String argument is not proper: " + urlString);
-        }*/
+        String locationQuery = "location=" + location;
+        String fullURLString = urlString + locationQuery + finalAttr;
+
         // creating URL object
-        url = new URL(urlString);
+        url = new URL(fullURLString);
         // get URL connection
         urlConnection = url.openConnection();
         connection = null;
+        String bearerAuth = "Bearer " + yelpApiKey;
         // we can check, if connection is proper type
         if (urlConnection instanceof HttpURLConnection) {
             connection = (HttpURLConnection) urlConnection;
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization", bearerAuth);
             connection.setRequestProperty("Content-Type", "application/json");
         } else {
             log.info("Please enter an HTTP URL");

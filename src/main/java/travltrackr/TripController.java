@@ -1,10 +1,14 @@
 package travltrackr;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -16,14 +20,37 @@ public class TripController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NoteRepository noteRepository;
+
+    @Value("${yelp.api.client_secret}")
+    private String yelpApiKey;
+
     @PostMapping("/api/trips")
-    public Trip createTrip(@RequestBody Trip trip, HttpSession session)throws Exception{
+    public Trip createTrip(@RequestBody HashMap<String, Object> trip, HttpSession session)throws Exception{
         User foundUser = userRepository.findByUsername(session.getAttribute("username").toString());
         if(foundUser == null){
             throw new Exception("You need to login");
         }
-        trip.setUser(foundUser);
-        return  tripRepository.save(trip);
+        System.out.println("------------------------------");
+        System.out.println(trip.get("initialNote"));
+        System.out.println(trip.get("name"));
+        Trip tripToSave = new Trip();
+        tripToSave.setName(trip.get("name").toString());
+        tripToSave.setState(trip.get("state").toString());
+        tripToSave.setCountry(trip.get("country").toString());
+        // convert the date object into a date
+        Date dateArrived = new SimpleDateFormat("yyyy-MM-dd").parse(trip.get("dateArrived").toString());
+        Date dateLeft = new SimpleDateFormat("yyyy-MM-dd").parse(trip.get("dateLeft").toString());
+        tripToSave.setDateArrived(dateArrived);
+        tripToSave.setDateLeft(dateLeft);
+        tripToSave.setUser(foundUser);
+        Trip createdTrip = tripRepository.save(tripToSave);
+        Note note = new Note();
+        note.setNotes(trip.get("initialNote").toString());
+        note.setTrip(createdTrip);
+        noteRepository.save(note);
+        return createdTrip;
     }
 
     @GetMapping("/api/trips")
@@ -53,7 +80,6 @@ public class TripController {
         foundTrip.setCountry(trip.getCountry());
         foundTrip.setDateArrived(trip.getDateArrived());
         foundTrip.setDateLeft(trip.getDateLeft());
-        foundTrip.setNotes(trip.getNotes());
         return tripRepository.save(foundTrip);
     }
 
@@ -63,17 +89,43 @@ public class TripController {
         return "Deleted the trip";
     }
 
-    @GetMapping("/api/trips/call")
-    public Object apiCall()throws Exception{
+    @GetMapping("/api/trips/call/{location}/{attr}")
+    public Object apiCall(@PathVariable String location, @PathVariable String attr)throws Exception{
+        String finalAttr = "";
+        if(attr == "hot_and_new"){
+            finalAttr = "&attributes=hot_and_new";
+        }else if(attr == "most_reviewed"){
+            finalAttr = "&sort_by=review_count";
+        }else if(attr == "best_match"){
+            finalAttr = "&sort_by=best_match";
+        }
         HttpRequest test = new HttpRequest();
-        Object content = test.testURL(test.URLSTRING);
+        Object content = test.testURL(test.URLCOMPOUND, yelpApiKey, location, finalAttr);
         return content;
     }
 
-    @GetMapping("/api/trips/call2")
-    public Object apiFetch()throws Exception{
-        URLFetcher test = new URLFetcher();
-        Object content = test.urlFetch();
-        return content;
-    }
+   @GetMapping("/api/trips/{id}/notes")
+    public Iterable<Note> getNotes(@PathVariable Long id){
+        Optional<Trip> foundTrip = tripRepository.findById(id);
+        return noteRepository.findAllByTrip(foundTrip);
+   }
+
+   @DeleteMapping("/api/notes/{id}")
+    public String deleteNote(@PathVariable Long id){
+        noteRepository.deleteById(id);
+        return "Deleted the note with id: " + id;
+   }
+
+   @PostMapping("/api/trips/{tripId}/notesAdd")
+    public Note addNote(@PathVariable Long tripId, @RequestBody String note)throws Exception{
+        Optional<Trip> foundTrip = tripRepository.findById(tripId);
+        if(foundTrip.isPresent()){
+            Note newNote = new Note();
+            newNote.setNotes(note);
+            newNote.setTrip(foundTrip.get());
+            return noteRepository.save(newNote);
+        }else{
+            throw new Exception("There is no trip with that id");
+        }
+   }
 }
