@@ -1,7 +1,12 @@
+travltrackr/TripController.class
 travltrackr/SecurityConfiguration.class
+travltrackr/TripRepository.class
+travltrackr/URLFetcher.class
+travltrackr/Trip.class
+travltrackr/UserRepository.class
+travltrackr/WebConfig.class
 travltrackr/UserController.class
 travltrackr/User.class
 travltrackr/Application.class
+travltrackr/HttpRequest.class
 travltrackr/UserService.class
-travltrackr/UserRepository.class
-travltrackr/WebConfig.class

@@ -35,7 +35,6 @@ public class UserController {
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         User foundUser = userRepository.findByUsername(user.getUsername());
-        System.out.println(foundUser.getPassword() + "and" + user.getPassword());
         boolean validPass = bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword());
         if(validPass){
             session.setAttribute("username", foundUser.getUsername());

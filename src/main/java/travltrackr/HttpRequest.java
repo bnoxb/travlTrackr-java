@@ -1,0 +1,67 @@
+package travltrackr;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HttpRequest {
+    public final Logger log = LoggerFactory.getLogger(HttpRequest.class);
+
+    String URLSTRING = "https://api.darksky.net/forecast/f731e2c5a8a857fbe7119a0c1b5e76c9/39.693967,-104.911074?exclude=minutely,hourly";
+    // parsed locator
+    String URLPROTOCOL = "https";
+    // final static String URLAUTHORITY = "wordpress.org:443";
+    String URLHOST = "wordpress.org";
+    String URLPATH = "/support/topic/page-jumps-within-wordpress/";
+    // final static String URLFILENAME = "/support/topic/page-jumps-within-wordpress/?replies=3";
+    // final static int URLPORT = 443;
+    int URLDEFAULTPORT = 443;
+    String URLQUERY = "replies=3";
+    String URLREFERENCE = "post-2278484";
+    String URLCOMPOUND = URLPROTOCOL + "://" + URLHOST + ":" + URLDEFAULTPORT + URLPATH + "?" + URLQUERY + "#" + URLREFERENCE;
+
+    URL url;
+    URLConnection urlConnection = null;
+    HttpURLConnection connection = null;
+    BufferedReader in = null;
+    String urlContent = "";
+
+    public String testURL(String urlString) throws IOException, IllegalArgumentException {
+        String urlStringCont = "";
+        // comment the if clause if experiment with URL
+        /*if (!URLSTRING.equals(urlString)) {
+            throw new IllegalArgumentException("URL String argument is not proper: " + urlString);
+        }*/
+        // creating URL object
+        url = new URL(urlString);
+        // get URL connection
+        urlConnection = url.openConnection();
+        connection = null;
+        // we can check, if connection is proper type
+        if (urlConnection instanceof HttpURLConnection) {
+            connection = (HttpURLConnection) urlConnection;
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+        } else {
+            log.info("Please enter an HTTP URL");
+            throw new IOException("HTTP URL is not correct");
+        }
+        // we can check response code (200 OK is expected)
+        log.info(connection.getResponseCode() + " " + connection.getResponseMessage());
+        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String current;
+
+        while ((current = in.readLine()) != null) {
+            urlStringCont += current;
+        }
+        return urlStringCont;
+    }
+}
+
