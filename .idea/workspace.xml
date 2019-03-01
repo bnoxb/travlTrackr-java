@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9418322a-c30a-47a8-b2ac-7c83b67fe9ec" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/Trip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/Trip.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/TripController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/TripController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/TripRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/TripRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/travltrackr/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/travltrackr/UserService.java" afterDir="false" />
-    </list>
+    <list default="true" id="9418322a-c30a-47a8-b2ac-7c83b67fe9ec" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -246,7 +237,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551461399310" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551463489511" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -304,6 +295,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="803" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
