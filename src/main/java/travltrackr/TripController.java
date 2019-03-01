@@ -17,7 +17,7 @@ public class TripController {
     private TripRepository tripRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
     private NoteRepository noteRepository;
@@ -27,7 +27,7 @@ public class TripController {
 
     @PostMapping("/api/trips")
     public Trip createTrip(@RequestBody HashMap<String, Object> trip, HttpSession session)throws Exception{
-        Users foundUsers = userRepository.findByUsername(session.getAttribute("username").toString());
+        Users foundUsers = usersRepository.findByUsername(session.getAttribute("username").toString());
         if(foundUsers == null){
             throw new Exception("You need to login");
         }
@@ -65,8 +65,8 @@ public class TripController {
 
     @GetMapping("/api/users/{userId}/trips")
     public Iterable<Trip> showUsersTrips(@PathVariable Long userId){
-        Optional<Users> foundUser = userRepository.findById(userId);
-        Iterable<Trip> foundTrips = tripRepository.findAllByUser(foundUser);
+        Optional<Users> foundUser = usersRepository.findById(userId);
+        Iterable<Trip> foundTrips = tripRepository.findAllByUsers(foundUser);
         return foundTrips;
     }
 
