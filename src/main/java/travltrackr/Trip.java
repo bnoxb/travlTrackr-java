@@ -1,7 +1,5 @@
 package travltrackr;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -19,7 +17,7 @@ public class Trip {
     @JoinColumn(
             name="user_id"
     )
-    private User user;
+    private Users users;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private Set<Note> notes;
@@ -28,12 +26,12 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public User getUser() {
-        return user;
+    public Users getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     public String getName() {

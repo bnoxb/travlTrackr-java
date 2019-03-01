@@ -19,47 +19,47 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/api/users")
-    public Iterable<User> index(){
+    public Iterable<Users> index(){
         return userRepository.findAll();
     }
 
     @PostMapping("/api/users/register")
-    public User createUser(@RequestBody User user){
-        User createdUser = userService.saveUser(user);
-        return createdUser;
+    public Users createUser(@RequestBody Users users){
+        Users createdUsers = userService.saveUser(users);
+        return createdUsers;
     }
 
     @PostMapping("/api/users/login")
-    public User checkLogin(@RequestBody User user, HttpSession session)throws Exception{
+    public Users checkLogin(@RequestBody Users users, HttpSession session)throws Exception{
 
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        User foundUser = userRepository.findByUsername(user.getUsername());
-        boolean validPass = bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword());
+        Users foundUsers = userRepository.findByUsername(users.getUsername());
+        boolean validPass = bCryptPasswordEncoder.matches(users.getPassword(), foundUsers.getPassword());
         if(validPass){
-            session.setAttribute("username", foundUser.getUsername());
-            return foundUser;
+            session.setAttribute("username", foundUsers.getUsername());
+            return foundUsers;
         }else{
             throw new Exception("incorrect credentials");
         }
     }
 
     @GetMapping("/api/users/{id}")
-    public Optional<User> showUser(@PathVariable Long id){
-        Optional<User> foundUser = userRepository.findById(id);
+    public Optional<Users> showUser(@PathVariable Long id){
+        Optional<Users> foundUser = userRepository.findById(id);
         return foundUser;
     }
 
     @PutMapping("/api/users/{id}")
-    public User editUser(@PathVariable Long id, @RequestBody User user){
+    public Users editUser(@PathVariable Long id, @RequestBody Users users){
         // Dont forget to make a new BCrypt when using bcrypt
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        Optional<User> userToEdit = userRepository.findById(id);
-        User foundUser = userToEdit.get();
-        foundUser.setUsername(user.getUsername());
-        foundUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        foundUser.setEmail(user.getEmail());
-        return userRepository.save(foundUser);
+        Optional<Users> userToEdit = userRepository.findById(id);
+        Users foundUsers = userToEdit.get();
+        foundUsers.setUsername(users.getUsername());
+        foundUsers.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
+        foundUsers.setEmail(users.getEmail());
+        return userRepository.save(foundUsers);
     }
 
     @DeleteMapping("/api/users/{id}")

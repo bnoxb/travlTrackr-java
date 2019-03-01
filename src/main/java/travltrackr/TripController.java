@@ -2,7 +2,6 @@ package travltrackr;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -28,8 +27,8 @@ public class TripController {
 
     @PostMapping("/api/trips")
     public Trip createTrip(@RequestBody HashMap<String, Object> trip, HttpSession session)throws Exception{
-        User foundUser = userRepository.findByUsername(session.getAttribute("username").toString());
-        if(foundUser == null){
+        Users foundUsers = userRepository.findByUsername(session.getAttribute("username").toString());
+        if(foundUsers == null){
             throw new Exception("You need to login");
         }
         System.out.println("------------------------------");
@@ -44,7 +43,7 @@ public class TripController {
         Date dateLeft = new SimpleDateFormat("yyyy-MM-dd").parse(trip.get("dateLeft").toString());
         tripToSave.setDateArrived(dateArrived);
         tripToSave.setDateLeft(dateLeft);
-        tripToSave.setUser(foundUser);
+        tripToSave.setUsers(foundUsers);
         Trip createdTrip = tripRepository.save(tripToSave);
         Note note = new Note();
         note.setNotes(trip.get("initialNote").toString());
@@ -66,7 +65,7 @@ public class TripController {
 
     @GetMapping("/api/users/{userId}/trips")
     public Iterable<Trip> showUsersTrips(@PathVariable Long userId){
-        Optional<User> foundUser = userRepository.findById(userId);
+        Optional<Users> foundUser = userRepository.findById(userId);
         Iterable<Trip> foundTrips = tripRepository.findAllByUser(foundUser);
         return foundTrips;
     }
