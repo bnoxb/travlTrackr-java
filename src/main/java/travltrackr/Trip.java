@@ -15,7 +15,7 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(
-            name="user_id"
+            name="users_id"
     )
     private Users users;
 
